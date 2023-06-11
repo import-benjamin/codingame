@@ -55,7 +55,7 @@ fn main() {
             _ => true}
     };
 
-    for i in 1..height {
+    for i in 1..(height+1) {
         let content: String = if i == height { rendered_line.to_string() } else { read_input() };
         
         let next = parse_line(i as i32, content);
@@ -69,7 +69,11 @@ fn main() {
                 |(i,v)| println!(
                     "{} {} {}",
                     v,
-                    curr.get(i+1).unwrap_or_else(|| &EMPTY_NODE),
+                    curr.iter()
+                        .enumerate()
+                        .filter(remove_empty_nodes)
+                        .find(|&(li, _)| li > i)
+                        .unwrap_or_else(|| (0, &EMPTY_NODE)).1,
                     next.get(i).unwrap_or_else(|| &EMPTY_NODE)
                 )
             );
